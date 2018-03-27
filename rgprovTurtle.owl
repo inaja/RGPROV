@@ -1,235 +1,235 @@
+@base <http://www.ecs.soton.ac.uk/rgprov> .
 @prefix : <http://www.ecs.soton.ac.uk/rgprov#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@base <http://www.ecs.soton.ac.uk/rgprov> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
 
-<http://www.ecs.soton.ac.uk/rgprov> rdf:type owl:Ontology ;
-                                     owl:versionIRI <urn:absolute:1> ;
-                                     owl:imports <http://www.w3.org/ns/prov-o-20130430> ;
-                                     rdfs:comment "A specialization of PROV-O"@en .
+<http://www.ecs.soton.ac.uk/rgprov#> a owl:Ontology ;
+	owl:imports <http://www.w3.org/ns/prov-o> ;
+	rdfs:comment "A specialization of PROV-O"@en .
 
-#################################################################
-#    Object Properties
-#################################################################
-
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:copied
-:rgprov:copied rdf:type owl:ObjectProperty ;
-               rdfs:subPropertyOf <http://www.w3.org/ns/prov#used> ;
-               rdfs:domain :rgprov:Fetch ;
-               rdfs:range :rgprov:Graph ;
-               rdfs:comment "A copy of rgprov:Graph was fetched."@en .
-
-
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:deleted
-:rgprov:deleted rdf:type owl:ObjectProperty ;
-                rdfs:subPropertyOf <http://www.w3.org/ns/prov#used> ;
-                rdfs:domain :rgprov:DeleteOperation ;
-                rdfs:range :rgprov:UpdateGraph ;
-                rdfs:comment "The rgprov:UpdateGraph used by the rgprov:InsertOperation to delete triples into an rgprov:Graph."@en .
-
-
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:hadMinuend
-:rgprov:hadMinuend rdf:type owl:ObjectProperty ;
-                   rdfs:subPropertyOf <http://www.w3.org/ns/prov#used> ;
-                   rdfs:domain :rgprov:Difference ;
-                   rdfs:range :rgprov:Graph ;
-                   rdfs:comment "An rgprov:Graph was used as the first component of a graph difference activity."@en .
-
-
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:hadSubtrahend
-:rgprov:hadSubtrahend rdf:type owl:ObjectProperty ;
-                      rdfs:subPropertyOf <http://www.w3.org/ns/prov#used> ;
-                      rdfs:domain :rgprov:Difference ;
-                      rdfs:range :rgprov:Graph ;
-                      rdfs:comment "An rgprov:Graph was used as the second component of a graph difference activity."@en .
-
-
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:inserted
-:rgprov:inserted rdf:type owl:ObjectProperty ;
-                 rdfs:subPropertyOf <http://www.w3.org/ns/prov#used> ;
-                 rdfs:domain :rgprov:InsertOperation ;
-                 rdfs:range :rgprov:UpdateGraph ;
-                 rdfs:comment "The rgprov:UpdateGraph used by the rgprov:InsertOperation to add triples into an rgprov:Graph."@en .
-
-
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:wasCopyResult
-:rgprov:wasCopyResult rdf:type owl:ObjectProperty ;
-                      rdfs:subPropertyOf <http://www.w3.org/ns/prov#wasGeneratedBy> ;
-                      rdfs:domain :rgprov:Graph ;
-                      rdfs:range :rgprov:Fetch ;
-                      rdfs:comment "An rgprov:Graph was the result of copy (fetch) activity."@en .
-
-
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:wasEntailedFrom
-:rgprov:wasEntailedFrom rdf:type owl:ObjectProperty ;
-                        rdfs:subPropertyOf <http://www.w3.org/ns/prov#wasDerivedFrom> ;
-                        rdfs:domain :rgprov:Graph ;
-                        rdfs:range :rgprov:Graph ;
-                        rdfs:comment "An entailment is the construction of a new rgprov:Graph based on a pre-existing rgprov:Graph."@en .
-
-
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:wasExactCopy
-:rgprov:wasExactCopy rdf:type owl:ObjectProperty ;
-                     rdfs:subPropertyOf <http://www.w3.org/ns/prov#wasQuotedFrom> ;
-                     rdfs:domain :rgprov:Graph ;
-                     rdfs:range :rgprov:Graph ;
-                     rdfs:comment "A graph was an exact replica of another."@en .
-
-
-#################################################################
+######################################################################
 #    Classes
-#################################################################
+######################################################################
 
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:DEntailment
-:rgprov:DEntailment rdf:type owl:Class ;
-                    rdfs:subClassOf :rgprov:Entailment ;
-                    <http://www.w3.org/ns/prov#definition> "An activity that was performed on exactly one rgprov:Graph to produce another rgprov:Graph that contains inferred triples, based on the Datatype Entailment Regime." .
+###  http://www.ecs.soton.ac.uk/rgprov#Graph
+:Graph a owl:Class ;
+	rdfs:subClassOf prov:Entity ;
+	prov:definition "An RDF or OWL graph" .
 
+###  http://www.ecs.soton.ac.uk/rgprov#UpdateGraph
+:UpdateGraph a owl:Class ;
+	rdfs:subClassOf :Graph ;
+	prov:definition "A subclass of rgprov:Graph that represents the graphs 
+	whose triples are to be inserted or deleted." .
+	
+###  http://www.ecs.soton.ac.uk/rgprov#Fetch
+:Fetch a owl:Class ;
+	rdfs:subClassOf prov:Activity ;
+	owl:disjointWith :GraphOperation ;
+	prov:definition "An activity that indicates that a fetch (copy) operation 
+	has taken place." .
+	
+###  http://www.ecs.soton.ac.uk/rgprov#GraphOperation
+:GraphOperation a owl:Class ;
+	rdfs:subClassOf prov:Activity ;
+	prov:definition "An activity that was performed on at least one 
+	rgprov:Graph to produce another graph." .
+	
+###  http://www.ecs.soton.ac.uk/rgprov#Intersection
+:Intersection a owl:Class ;
+	 rdfs:subClassOf :GraphOperation ;
+	 owl:disjointWith :Union ;
+	 prov:definition "An activity that was performed on at least two 
+	 rgprov:Graphs to produce their intersection graph." .
 
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:DReasoner
-:rgprov:DReasoner rdf:type owl:Class ;
-                  rdfs:subClassOf :rgprov:Reasoner ;
-                  <http://www.w3.org/ns/prov#definition> "The software that bears the responsibilty of reasoning on an rgprov:Graph using the Datatype Entailment Regime." .
+###  http://www.ecs.soton.ac.uk/rgprov#Union
+:Union a owl:Class ;
+	rdfs:subClassOf :GraphOperation ;
+	prov:definition "An activity that was performed on at least two 
+	rgprov:Graphs to produce their union graph." .	
 
+###  http://www.ecs.soton.ac.uk/rgprov#Difference
+:Difference a owl:Class ;
+	rdfs:subClassOf :GraphOperation ;
+	owl:disjointWith :Intersection , :Union ;
+	prov:definition "An activity that was performed on exactly two 
+	rgprov:Graphs to produce their difference." .
 
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:DeleteOperation
-:rgprov:DeleteOperation rdf:type owl:Class ;
-                        rdfs:subClassOf :rgprov:GraphOperation ;
-                        owl:disjointWith :rgprov:InsertOperation ;
-                        <http://www.w3.org/ns/prov#definition> "An activity that was performed on exactly one rgprov:Graph, consisting of deleting triples found in exactly one other rgprov:Graph, to produce a third rgprov:Graph." .
+###  http://www.ecs.soton.ac.uk/rgprov#InsertOperation
+:InsertOperation a owl:Class ;
+	rdfs:subClassOf :GraphOperation ;
+	prov:definition "An activity that was performed on exactly one 
+	rgprov:Graph, consisting of inserting triples found in exactly 
+	one other rgprov:Graph, to produce a third rgprov:Graph." .
+	
+###  http://www.ecs.soton.ac.uk/rgprov#DeleteOperation
+:DeleteOperation a owl:Class ;
+	rdfs:subClassOf :GraphOperation ;
+	owl:disjointWith :InsertOperation ;
+	prov:definition "An activity that was performed on exactly one 
+	rgprov:Graph, consisting of deleting triples found in exactly 
+	one other rgprov:Graph, to produce a third rgprov:Graph." .
 
+###  http://www.ecs.soton.ac.uk/rgprov#UpdateOperation
+:UpdateOperation a owl:Class ;
+	rdfs:subClassOf :DeleteOperation , :InsertOperation .
+	
+###  http://www.ecs.soton.ac.uk/rgprov#Entailment
+:Entailment a owl:Class ;
+	rdfs:subClassOf :GraphOperation ;
+	prov:definition "An activity that was performed on exactly one 
+	rgprov:Graph to produce another rgprov:Graph that contains 
+	inferred triples." .
 
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:Difference
-:rgprov:Difference rdf:type owl:Class ;
-                   rdfs:subClassOf :rgprov:GraphOperation ;
-                   owl:disjointWith :rgprov:Intersection ,
-                                    :rgprov:Union ;
-                   <http://www.w3.org/ns/prov#definition> "An activity that was performed on exactly two rgprov:Graphs to produce their difference." .
+###  http://www.ecs.soton.ac.uk/rgprov#DEntailment
+:DEntailment a owl:Class ;
+	rdfs:subClassOf :Entailment ;
+	prov:definition "An activity that was performed on exactly one 
+	rgprov:Graph to produce another rgprov:Graph that contains 
+	inferred triples, based on the Datatype Entailment Regime." .
+	
+###  http://www.ecs.soton.ac.uk/rgprov#OWLDirectEntailment
+:OWLDirectEntailment a owl:Class ;
+	rdfs:subClassOf :Entailment ;
+	prov:definition "An activity that was performed on exactly one 
+	rgprov:Graph to produce another rgprov:Graph that contains 
+	inferred triples, based on the OWL Direct Entailment Regime." .
 
+###  http://www.ecs.soton.ac.uk/rgprov#OWLRDFEntailment
+:OWLRDFEntailment a owl:Class ;
+	rdfs:subClassOf :Entailment ;
+	prov:definition "An activity that was performed on exactly one 
+	rgprov:Graph to produce another rgprov:Graph that contains 
+	inferred triples, based on the OWL RDF-based Entailment Regime." .
 
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:Entailment
-:rgprov:Entailment rdf:type owl:Class ;
-                   rdfs:subClassOf :rgprov:GraphOperation ;
-                   <http://www.w3.org/ns/prov#definition> "An activity that was performed on exactly one rgprov:Graph to produce another rgprov:Graph that contains inferred triples." .
+###  http://www.ecs.soton.ac.uk/rgprov#RDFSEntailment
+:RDFSEntailment a owl:Class ;
+	   rdfs:subClassOf :Entailment ;
+	   prov:definition "An activity that was performed on exactly one 
+		 rgprov:Graph to produce another rgprov:Graph that contains 
+		 inferred triples, based on the RDFS Entailment Regime." .	
+ 
+###  http://www.ecs.soton.ac.uk/rgprov#RIFEntailment
+:RIFEntailment a owl:Class ;
+	  rdfs:subClassOf :Entailment ;
+	  prov:definition "An activity that was performed on exactly one 
+		rgprov:Graph to produce another rgprov:Graph that contains 
+		inferred triples, based on the RIF Core Entailment Regime." .
 
+###  http://www.ecs.soton.ac.uk/rgprov#RDFEntailment
+:RDFEntailment a owl:Class ;
+	rdfs:subClassOf :Entailment ;
+	prov:definition "An activity that was performed on exactly one 
+	rgprov:Graph to produce another rgprov:Graph that contains 
+	inferred triples, based on the RDF Entailment Regime." .
 
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:Fetch
-:rgprov:Fetch rdf:type owl:Class ;
-              rdfs:subClassOf <http://www.w3.org/ns/prov#Activity> ;
-              owl:disjointWith :rgprov:GraphOperation ;
-              <http://www.w3.org/ns/prov#definition> "An activity that indicates that a fetch (copy) operation has taken place." .
+###  http://www.ecs.soton.ac.uk/rgprov#Reasoner
+:Reasoner a owl:Class ;
+	rdfs:subClassOf prov:SoftwareAgent ;
+	prov:definition "The software that bears the responsibility of reasoning
+	on an rgprov:Graph." .
+	  
+###  http://www.ecs.soton.ac.uk/rgprov#OWLRDFReasoner
+:OWLRDFReasoner a owl:Class ;
+	rdfs:subClassOf :Reasoner ;
+	prov:definition "The software that bears the responsibility of reasoning
+	on an rgprov:Graph using the OWL RDF-Based Entailment Regime." .
+	
+###  http://www.ecs.soton.ac.uk/rgprov#DReasoner
+:DReasoner a owl:Class ;
+	rdfs:subClassOf :Reasoner ;
+	prov:definition "The software that bears the responsibility of reasoning
+	on an rgprov:Graph using the Datatype Entailment Regime." .
+	
+###  http://www.ecs.soton.ac.uk/rgprov#OWLDirectReasoner
+:OWLDirectReasoner a owl:Class ;
+	rdfs:subClassOf :Reasoner ;
+	prov:definition "The software that bears the responsibility of reasoning
+	on an rgprov:Graph using the OWL Direct Entailment Regime." .
+	
+###  http://www.ecs.soton.ac.uk/rgprov#RDFReasoner
+:RDFReasoner a owl:Class ;
+	rdfs:subClassOf :Reasoner ;
+	prov:definition "The software that bears the responsibility of reasoning
+	on an rgprov:Graph using the RDF Entailment Regime." .
 
+###  http://www.ecs.soton.ac.uk/rgprov#RDFSReasoner
+:RDFSReasoner a owl:Class ;
+	 rdfs:subClassOf :Reasoner ;
+	 prov:definition "The software that bears the responsibility of reasoning
+	 on an rgprov:Graph using the RDFS Entailment Regime." .
 
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:Graph
-:rgprov:Graph rdf:type owl:Class ;
-              rdfs:subClassOf <http://www.w3.org/ns/prov#Entity> ;
-              <http://www.w3.org/ns/prov#definition> "An RDF or OWL graph" .
+###  http://www.ecs.soton.ac.uk/rgprov#RIFReasoner
+:RIFReasoner a owl:Class ;
+	rdfs:subClassOf :Reasoner ;
+	prov:definition "The software that bears the responsibility of reasoning 
+	on an rgprov:Graph using the RIF Core Entailment Regime." .
 
+######################################################################
+#    Object Properties
+######################################################################
 
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:GraphOperation
-:rgprov:GraphOperation rdf:type owl:Class ;
-                       rdfs:subClassOf <http://www.w3.org/ns/prov#Activity> ;
-                       <http://www.w3.org/ns/prov#definition> "An activity that was performed on at least one rgprov:Graph to produce another graph." .
+###  http://www.ecs.soton.ac.uk/rgprov#copied
+:copied a owl:ObjectProperty ;
+	rdfs:subPropertyOf prov:used;
+	rdfs:domain :Fetch ;
+	rdfs:range :Graph ;
+	rdfs:comment "A copy of rgprov:Graph was fetched."@en .
+	
+###  http://www.ecs.soton.ac.uk/rgprov#wasExactCopy
+:wasExactCopy a owl:ObjectProperty ;
+	rdfs:subPropertyOf prov:wasQuotedFrom ;
+	rdfs:domain :Graph ;
+	rdfs:range :Graph ;
+	rdfs:comment "A graph was an exact replica of another."@en .
+	
+###  http://www.ecs.soton.ac.uk/rgprov#wasCopyResult
+:wasCopyResult a owl:ObjectProperty ;
+	rdfs:subPropertyOf prov:wasGeneratedBy ;
+	rdfs:domain :Graph ;
+	rdfs:range :Fetch ;
+	rdfs:comment "An rgprov:Graph was the result of copy (fetch) 
+	activity."@en .
 
+###  http://www.ecs.soton.ac.uk/rgprov#inserted
+:inserted a owl:ObjectProperty ;
+	rdfs:subPropertyOf prov:used ;
+	rdfs:domain :InsertOperation ;
+	rdfs:range :UpdateGraph ;
+	rdfs:comment "The rgprov:UpdateGraph used by the rgprov:InsertOperation 
+	to add triples into an rgprov:Graph."@en .
+	
+###  http://www.ecs.soton.ac.uk/rgprov#deleted
+:deleted a owl:ObjectProperty ;
+	rdfs:subPropertyOf prov:used ;
+	rdfs:domain :DeleteOperation ;
+	rdfs:range :UpdateGraph ;
+	rdfs:comment "The rgprov:UpdateGraph used by the rgprov:InsertOperation 
+	to delete triples into an rgprov:Graph."@en .
 
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:InsertOperation
-:rgprov:InsertOperation rdf:type owl:Class ;
-                        rdfs:subClassOf :rgprov:GraphOperation ;
-                        <http://www.w3.org/ns/prov#definition> "An activity that was performed on exactly one rgprov:Graph, consisting of inserting triples found in exactly one other rgprov:Graph, to produce a third rgprov:Graph." .
+###  http://www.ecs.soton.ac.uk/rgprov#hadMinuend
+:hadMinuend a owl:ObjectProperty ;
+	rdfs:subPropertyOf prov:used ;
+	rdfs:domain :Difference ;
+	rdfs:range :Graph ;
+	rdfs:comment "An rgprov:Graph was used as the first component of a graph 
+	difference activity."@en .
 
+###  http://www.ecs.soton.ac.uk/rgprov#hadSubtrahend
+:hadSubtrahend a owl:ObjectProperty ;
+	rdfs:subPropertyOf prov:used ;
+	rdfs:domain :Difference ;
+	rdfs:range :Graph ;
+	rdfs:comment "An rgprov:Graph was used as the second component of a graph 
+	difference activity."@en .
 
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:Intersection
-:rgprov:Intersection rdf:type owl:Class ;
-                     rdfs:subClassOf :rgprov:GraphOperation ;
-                     owl:disjointWith :rgprov:Union ;
-                     <http://www.w3.org/ns/prov#definition> "An activity that was performed on at least two rgprov:Graphs to produce their intersection graph." .
-
-
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:OWLDirectEntailment
-:rgprov:OWLDirectEntailment rdf:type owl:Class ;
-                            rdfs:subClassOf :rgprov:Entailment ;
-                            <http://www.w3.org/ns/prov#definition> "An activity that was performed on exactly one rgprov:Graph to produce another rgprov:Graph that contains inferred triples, based on the OWL Direct Entailment Regime." .
-
-
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:OWLDirectReasoner
-:rgprov:OWLDirectReasoner rdf:type owl:Class ;
-                          rdfs:subClassOf :rgprov:Reasoner ;
-                          <http://www.w3.org/ns/prov#definition> "The software that bears the responsibilty of reasoning on an rgprov:Graph using the OWL Direct Entailment Regime." .
-
-
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:OWLRDFEntailment
-:rgprov:OWLRDFEntailment rdf:type owl:Class ;
-                         rdfs:subClassOf :rgprov:Entailment ;
-                         <http://www.w3.org/ns/prov#definition> "An activity that was performed on exactly one rgprov:Graph to produce another rgprov:Graph that contains inferred triples, based on the OWL RDF-based Entailment Regime." .
-
-
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:OWLRDFReasoner
-:rgprov:OWLRDFReasoner rdf:type owl:Class ;
-                       rdfs:subClassOf :rgprov:Reasoner ;
-                       <http://www.w3.org/ns/prov#definition> "The software that bears the responsibilty of reasoning on an rgprov:Graph using the OWL RDF-Based Entailment Regime." .
-
-
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:RDFEntailment
-:rgprov:RDFEntailment rdf:type owl:Class ;
-                      rdfs:subClassOf :rgprov:Entailment ;
-                      <http://www.w3.org/ns/prov#definition> "An activity that was performed on exactly one rgprov:Graph to produce another rgprov:Graph that contains inferred triples, based on the RDF Entailment Regime." .
-
-
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:RDFReasoner
-:rgprov:RDFReasoner rdf:type owl:Class ;
-                    rdfs:subClassOf :rgprov:Reasoner ;
-                    <http://www.w3.org/ns/prov#definition> "The software that bears the responsibilty of reasoning on an rgprov:Graph using the RDF Entailment Regime." .
-
-
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:RDFSEntailment
-:rgprov:RDFSEntailment rdf:type owl:Class ;
-                       rdfs:subClassOf :rgprov:Entailment ;
-                       <http://www.w3.org/ns/prov#definition> "An activity that was performed on exactly one rgprov:Graph to produce another rgprov:Graph that contains inferred triples, based on the RDFS Entailment Regime." .
-
-
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:RDFSReasoner
-:rgprov:RDFSReasoner rdf:type owl:Class ;
-                     rdfs:subClassOf :rgprov:Reasoner ;
-                     <http://www.w3.org/ns/prov#definition> "The software that bears the responsibilty of reasoning on an rgprov:Graph using the RDFS Entailment Regime." .
-
-
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:RIFEntailment
-:rgprov:RIFEntailment rdf:type owl:Class ;
-                      rdfs:subClassOf :rgprov:Entailment ;
-                      <http://www.w3.org/ns/prov#definition> "An activity that was performed on exactly one rgprov:Graph to produce another rgprov:Graph that contains inferred triples, based on the RIF Core Entailment Regime." .
-
-
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:RIFReasoner
-:rgprov:RIFReasoner rdf:type owl:Class ;
-                    rdfs:subClassOf :rgprov:Reasoner ;
-                    <http://www.w3.org/ns/prov#definition> "The software that bears the responsibilty of reasoning on an rgprov:Graph using the RIF Core Entailment Regime." .
-
-
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:Reasoner
-:rgprov:Reasoner rdf:type owl:Class ;
-                 rdfs:subClassOf <http://www.w3.org/ns/prov#SoftwareAgent> ;
-                 <http://www.w3.org/ns/prov#definition> "The software that bears the responsibilty of reasoning on an rgprov:Graph." .
-
-
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:Union
-:rgprov:Union rdf:type owl:Class ;
-              rdfs:subClassOf :rgprov:GraphOperation ;
-              <http://www.w3.org/ns/prov#definition> "An activity that was performed on at least two rgprov:Graphs to produce their union graph." .
-
-
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:UpdateGraph
-:rgprov:UpdateGraph rdf:type owl:Class ;
-                    rdfs:subClassOf :rgprov:Graph ;
-                    <http://www.w3.org/ns/prov#definition> "A subclass of rgprov:Graph that represents the graphs whose triples are to be inserted or deleted." .
-
-
-###  http://www.ecs.soton.ac.uk/rgprov#rgprov:UpdateOperation
-:rgprov:UpdateOperation rdf:type owl:Class ;
-                        rdfs:subClassOf :rgprov:DeleteOperation ,
-                                        :rgprov:InsertOperation .
-
-
-###  Generated by the OWL API (version 4.2.6.20160910-2108) https://github.com/owlcs/owlapi
+###  http://www.ecs.soton.ac.uk/rgprov#wasEntailedFrom
+:wasEntailedFrom a owl:ObjectProperty ;
+	rdfs:subPropertyOf prov:wasDerivedFrom ;
+	rdfs:domain :Graph ;
+	rdfs:range :Graph ;
+	rdfs:comment "An entailment is the construction of a new rgprov:Graph 
+	based on a pre-existing rgprov:Graph."@en .
